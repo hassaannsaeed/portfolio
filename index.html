@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hassaan Saeed | Solo Mobile App Developer & AI Builder</title>
+    <meta name="description" content="Portfolio of Hassaan Saeed, a Solo Mobile App Developer & Software Engineer specialized in Dart, Flutter, Gemini AI integrations, and high-performance mobile products.">
+    <!-- Google Fonts: Outfit & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Background Elements -->
+    <canvas id="particle-canvas"></canvas>
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="custom-cursor"></div>
+    <div class="cursor-dot" id="cursor-dot"></div>
+
+    <!-- Header Navigation -->
+    <header class="header glass">
+        <div class="logo">
+            <span class="logo-accent">&lt;</span>HS<span class="logo-accent"> /&gt;</span>
+        </div>
+        <nav class="nav">
+            <a href="#hero" class="nav-link active">Home</a>
+            <a href="#about" class="nav-link">About</a>
+            <a href="#apps" class="nav-link">Apps</a>
+            <a href="#contact" class="nav-link">Contact</a>
+        </nav>
+        <div class="header-socials">
+            <a href="https://www.linkedin.com/in/hassaan-saeed-111047350/" target="_blank" class="social-icon-btn btn-glow" id="header-linkedin" aria-label="LinkedIn Profile">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="https://github.com/hassaannsaeed" target="_blank" class="social-icon-btn btn-glow" id="header-github" aria-label="GitHub Profile">
+                <i class="fab fa-github"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content Wrapper -->
+    <main class="container">
+        
+        <!-- Hero Section -->
+        <section id="hero" class="hero-section">
+            <div class="hero-content">
+                <div class="badge glass">
+                    <span class="pulse-dot"></span> Solo Mobile App Developer
+                </div>
+                <h1 class="hero-title" data-decrypt="Hassaan Saeed">Hassaan Saeed</h1>
+                <p class="hero-subtitle">Crafting next-generation mobile experiences integrated with advanced Artificial Intelligence.</p>
+                <div class="hero-actions">
+                    <a href="#apps" class="btn btn-primary btn-glow">View Projects</a>
+                    <a href="#contact" class="btn btn-secondary glass">Get in Touch</a>
+                </div>
+            </div>
+            <div class="hero-scroll-indicator">
+                <span class="mouse-icon">
+                    <span class="mouse-wheel"></span>
+                </span>
+                <span class="scroll-text">Scroll to explore</span>
+            </div>
+        </section>
+
+        <!-- Bento Grid Section -->
+        <section id="about" class="bento-section">
+            <h2 class="section-title" data-decrypt="OPERATING PROFILE">OPERATING PROFILE</h2>
+            
+            <div class="bento-grid">
+                
+                <!-- Main Profile / Bio Card -->
+                <div class="bento-card bento-profile glass reveal">
+                    <div class="card-glow"></div>
+                    <div class="profile-header">
+                        <div class="avatar-container">
+                            <div class="avatar-glow"></div>
+                            <div class="avatar-placeholder" id="avatar-img">
+                                <img src="assets/avatar.svg" alt="Hassaan Saeed Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; z-index: 2; position: relative;">
+                            </div>
+                        </div>
+                        <div class="profile-title">
+                            <h3>Hassaan Saeed</h3>
+                            <p>Developer & Founder at Castor Labs</p>
+                            <span class="location-badge"><i class="fa-solid fa-location-dot"></i> Sheikhupura, PK</span>
+                        </div>
+                    </div>
+                    <div class="profile-bio">
+                        <p>I build apps people actually use.</p>
+                        <p>I'm a web and mobile application developer with 2+ years of experience turning ideas into polished, working products. I design, build, launch, and improve apps based on real user feedback.</p>
+                        <p>My toolkit is Flutter and Firebase, which helps me ship fast on Android, iOS, and the web without compromising quality. Founder &amp; Developer at Castor Labs.</p>
+                    </div>
+                </div>
+
+                <div id="apps" class="apps-showcase reveal">
+                    <!-- Live App: Finora AI -->
+                    <div id="apps-card" class="bento-card bento-project-live glass reveal">
+                        <div class="card-glow"></div>
+                        <div class="project-header">
+                            <div class="project-icon finora-icon">
+                                <div class="finora-logo" aria-label="Finora AI logo">
+                                    <span class="finora-mark">F</span>
+                                </div>
+                            </div>
+                            <div class="project-meta">
+                                <h3>Finora AI</h3>
+                                <p>Expense Tracker</p>
+                            </div>
+                        </div>
+                        <p class="project-desc">
+                            A smart financial assistant built to automate expense tracking and budget analysis. Finora utilizes conversational AI and predictive spending categorization to keep your personal finance in check.
+                        </p>
+                        <div class="project-features">
+                            <span><i class="fa-solid fa-circle-check"></i> Conversational AI Assistant</span>
+                            <span><i class="fa-solid fa-circle-check"></i> Smart Spending Categorization</span>
+                            <span><i class="fa-solid fa-circle-check"></i> Interactive Charts & Analytics</span>
+                        </div>
+                        <div class="project-actions">
+                            <a href="https://play.google.com/store/apps/details?id=com.castorlabs.finora" target="_blank" class="btn btn-store btn-glow" id="play-store-finora">
+                                <i class="fab fa-google-play"></i> Get on Google Play
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- SmartDukaan -->
+                    <div class="bento-card bento-project-testing glass reveal">
+                        <div class="card-glow"></div>
+                        <div class="project-header">
+                            <div class="project-icon dukaan-icon">
+                                <i class="fa-solid fa-shop"></i>
+                            </div>
+                            <div class="project-meta">
+                                <h3>SmartDukaan</h3>
+                                <p>B2B Shop Companion</p>
+                            </div>
+                        </div>
+                        <p class="project-desc">
+                            A comprehensive management system designed for local retail shops. It digitizes physical inventories and ledger books using advanced AI and computer vision APIs.
+                        </p>
+                        <div class="project-features-grid">
+                            <div class="feature-item">
+                                <i class="fa-solid fa-barcode"></i>
+                                <div>
+                                    <h4>Barcode Scanner</h4>
+                                    <p>Instantly fetch product info via API</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fa-solid fa-file-invoice"></i>
+                                <div>
+                                    <h4>AI Invoice Scanner</h4>
+                                    <p>Extract product lists from images into inventory</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fa-solid fa-book-open"></i>
+                                <div>
+                                    <h4>Khata Management</h4>
+                                    <p>Secure digital ledger for customer credit</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fa-solid fa-comments"></i>
+                                <div>
+                                    <h4>Gemini Chatbot</h4>
+                                    <p>On-demand shop analytics and assistant</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-actions">
+                            <a href="https://play.google.com/store/apps/details?id=com.castorlabs.smartdukaan&hl=en" target="_blank" class="btn btn-store btn-glow" id="play-store-smartdukaan">
+                                <i class="fab fa-google-play"></i> Get on Google Play
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bento-card bento-project-offbeat glass reveal">
+                    <div class="card-glow"></div>
+                    <div class="project-tag testing">CLOSED TESTING</div>
+                    <div class="project-header">
+                        <div class="project-icon offbeat-icon">
+                            <i class="fa-solid fa-wave-square"></i>
+                        </div>
+                        <div class="project-meta">
+                            <h3>Offbeat</h3>
+                            <p>AI Digital Wellbeing Coach</p>
+                        </div>
+                    </div>
+
+                    <p class="project-desc short-tagline">
+                        AI-powered focus coaching for people who want healthier digital habits without blunt, punitive blockers.
+                    </p>
+
+                    <div class="case-study">
+                        <div class="case-section">
+                            <h4>Overview</h4>
+                            <p>Offbeat is a premium Android app built in Flutter to help users regain control of their attention through adaptive digital wellbeing coaching. Instead of locking users out with fixed limits, it learns their real usage patterns and responds with context-aware, non-punitive insights that help them understand when they are compulsively scrolling versus intentionally using their devices.</p>
+                        </div>
+                        <div class="case-section">
+                            <h4>Key Features</h4>
+                            <ul>
+                                <li>Addiction Score (0–100) for each app based on compulsive patterns and frequency, not just raw screen time.</li>
+                                <li>Focus Shield that closes common bypass routes as soon as usage exceeds a user-defined threshold.</li>
+                                <li>Notification muting, focus modes, hourly heatmaps, AI Weekly Insights, and daily AI Pulse coaching.</li>
+                                <li>Dopamine Detox streaks, urge journaling, and privacy-first local data tracking with offline-only AI insights.</li>
+                            </ul>
+                        </div>
+                        <div class="case-section">
+                            <h4>Tech Stack</h4>
+                            <p>Flutter / Dart, Kotlin platform channels, UsageStatsManager, NotificationListenerService, Isar local database, Flutter CustomPainter, BackdropFilter, and Google AdMob.</p>
+                        </div>
+                        <div class="case-section">
+                            <h4>Challenges & Highlights</h4>
+                            <p>The most technically interesting part of the build was the Android-native enforcement layer and the custom glassmorphism UI system. I implemented real-time app blocking with platform channels, managed sensitive Android permissions carefully, and built the interface with no third-party UI kit using Flutter's CustomPainter and BackdropFilter to achieve a premium liquid-glass visual language that feels modern and intentional while remaining performant.</p>
+                        </div>
+                    </div>
+                    <div class="project-actions centered-action">
+                        <a href="https://play.google.com/store/apps/details?id=com.castorlabs.offbeat&hl=en" target="_blank" class="btn btn-store btn-glow" id="play-store-offbeat">
+                            <i class="fab fa-google-play"></i> Get on Google Play
+                        </a>
+                    </div>
+                </div>
+
+                <div class="bento-card bento-project-promptguard glass reveal">
+                    <div class="card-glow"></div>
+                    <div class="project-tag testing">CLIENT PROJECT</div>
+                    <div class="project-header">
+                        <div class="project-icon promptguard-icon">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <div class="project-meta">
+                            <h3>PromptGuard</h3>
+                            <p>LLM Injection Defense</p>
+                        </div>
+                    </div>
+
+                    <p class="project-desc short-tagline">
+                        An AI-powered security firewall that protects enterprise LLM deployments from prompt injection and data leakage.
+                    </p>
+
+                    <div class="case-study">
+                        <div class="case-section">
+                            <h4>My Role</h4>
+                            <p>Solo full-stack developer — built the entire backend, ML integration, and Flutter mobile app end-to-end, based on a client’s SRS/SDS requirements and UI prototype.</p>
+                        </div>
+                        <div class="case-section">
+                            <h4>Key Features</h4>
+                            <ul>
+                                <li>Real-time prompt injection and jailbreak detection using a pretrained DeBERTa-v3 transformer classifier.</li>
+                                <li>Sensitive data detection for PII, API keys, credit cards, and credentials with configurable masking or blocking rules.</li>
+                                <li>Fail-closed pipeline, live admin dashboard, audit logging with SHA-256 hashing, and AI-driven alert triage.</li>
+                                <li>RBAC, policy tuning, CSV compliance exports, and system health monitoring for enterprise deployments.</li>
+                            </ul>
+                        </div>
+                        <div class="case-section">
+                            <h4>Tech Stack</h4>
+                            <p>Flutter / Dart, Python, FastAPI, SQLAlchemy, PostgreSQL, Hugging Face Transformers, PyTorch, JWT, bcrypt, and Role-Based Access Control.</p>
+                        </div>
+                        <div class="case-section">
+                            <h4>Challenges & Highlights</h4>
+                            <p>One of the hardest parts was integrating a real pretrained transformer model for semantic attack detection and building a policy-driven engine where admin-configured rules affect the live security pipeline. I also solved cross-platform networking and deployment challenges across Android emulator, Chrome web, and physical devices, making the platform resilient and client-ready.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Dashboard Card -->
+                <div class="bento-card bento-stats glass reveal">
+                    <div class="card-glow"></div>
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <span class="stat-number">2</span>
+                            <span class="stat-label">Published Apps</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-number">100%</span>
+                            <span class="stat-label">Solo Executed</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-number">AI</span>
+                            <span class="stat-label">API Integrated</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Skill HUD / Circle -->
+                <div class="bento-card bento-hud glass reveal">
+                    <div class="card-glow"></div>
+                    <h3>Core Matrix</h3>
+                    <p class="hud-subtitle">Interactive Tech Stack</p>
+                    <div class="hud-container">
+                        <div class="hud-circle-outer"></div>
+                        <div class="hud-circle-inner"></div>
+                        <div class="hud-core">
+                            <i class="fa-solid fa-atom pulse-hud"></i>
+                        </div>
+                        <div class="hud-orbit-item skill-dart" data-skill="Dart"><i class="fa-solid fa-terminal"></i></div>
+                        <div class="hud-orbit-item skill-python" data-skill="Python"><i class="fab fa-python"></i></div>
+                        <div class="hud-orbit-item skill-cpp" data-skill="C++"><i class="fa-solid fa-c"></i></div>
+                        <div class="hud-orbit-item skill-java" data-skill="Java"><i class="fab fa-java"></i></div>
+                        <div class="hud-orbit-item skill-js" data-skill="JS"><i class="fab fa-js"></i></div>
+                    </div>
+                    <div id="hud-skill-display" class="hud-display">Hover an node</div>
+                </div>
+
+                <!-- Skill Tags Grid -->
+                <div class="bento-card bento-skills glass reveal">
+                    <div class="card-glow"></div>
+                    <h3>Technical Index</h3>
+                    <div class="skills-wrapper">
+                        <div class="skill-category">
+                            <h4>Languages</h4>
+                            <div class="tags-list">
+                                <span class="tag">Dart</span>
+                                <span class="tag">Python</span>
+                                <span class="tag">C#</span>
+                                <span class="tag">C++</span>
+                                <span class="tag">Java</span>
+                                <span class="tag">JavaScript</span>
+                                <span class="tag">HTML / CSS</span>
+                            </div>
+                        </div>
+                        <div class="skill-category">
+                            <h4>Tech & Frameworks</h4>
+                            <div class="tags-list">
+                                <span class="tag">Flutter</span>
+                                <span class="tag">Gemini API</span>
+                                <span class="tag">OCR Scanner</span>
+                                <span class="tag">SQLite / Firebase</span>
+                                <span class="tag">Git & GitHub</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Education Card -->
+                <div class="bento-card bento-education glass reveal">
+                    <div class="card-glow"></div>
+                    <div class="education-header">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <h3>Education</h3>
+                    </div>
+                    <div class="education-content">
+                        <h4>BS Computer Science</h4>
+                        <p class="edu-inst">National University of Modern Languages (NUML)</p>
+                        <p class="edu-loc">Islamabad, Pakistan</p>
+                        <div class="timeline-dot"></div>
+                    </div>
+                </div>
+
+                <!-- Availability / Collaboration Card -->
+                <div class="bento-card bento-collab glass reveal">
+                    <div class="card-glow"></div>
+                    <div class="collab-header">
+                        <i class="fa-solid fa-bolt-lightning"></i>
+                        <h3>Availability</h3>
+                    </div>
+                    <div class="collab-content">
+                        <h4>Open to Work</h4>
+                        <p class="collab-status">Accepting remote contracts, freelance apps, or collaborative ventures.</p>
+                        <span class="status-indicator">Active</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact-section">
+            <h2 class="section-title" data-decrypt="ESTABLISH CONNECTION">ESTABLISH CONNECTION</h2>
+            
+            <div class="contact-grid">
+                
+                <div class="contact-info glass reveal">
+                    <div class="card-glow"></div>
+                    <h3>Get in Touch</h3>
+                    <p>Have an interesting project, job opportunity, or just want to chat about AI integrations in mobile apps? Drop a line.</p>
+                    
+                    <div class="contact-details">
+                        <a href="mailto:hassaannsaeed@gmail.com" class="detail-item" id="contact-email">
+                            <div class="detail-icon"><i class="fa-solid fa-envelope"></i></div>
+                            <div>
+                                <span>Email</span>
+                                <p>hassaannsaeed@gmail.com</p>
+                            </div>
+                        </a>
+                        <a href="tel:03150611166" class="detail-item" id="contact-phone">
+                            <div class="detail-icon"><i class="fa-solid fa-phone"></i></div>
+                            <div>
+                                <span>Phone</span>
+                                <p>+92 315 0611166</p>
+                            </div>
+                        </a>
+                        <a href="https://www.linkedin.com/in/hassaan-saeed-111047350/" target="_blank" class="detail-item" id="contact-linkedin">
+                            <div class="detail-icon"><i class="fab fa-linkedin-in"></i></div>
+                            <div>
+                                <span>LinkedIn</span>
+                                <p>Hassaan Saeed</p>
+                            </div>
+                        </a>
+                        <a href="https://www.instagram.com/____hassaann____/" target="_blank" class="detail-item" id="contact-instagram">
+                            <div class="detail-icon"><i class="fab fa-instagram"></i></div>
+                            <div>
+                                <span>Instagram</span>
+                                <p>@____hassaann____</p>
+                            </div>
+                        </a>
+                        <div class="detail-item">
+                            <div class="detail-icon"><i class="fa-solid fa-location-crosshairs"></i></div>
+                            <div>
+                                <span>Location</span>
+                                <p>Sheikhupura, Pakistan</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form-container glass reveal">
+                    <div class="card-glow"></div>
+                    <form class="contact-form" id="contact-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="form-name">Name</label>
+                                <input type="text" id="form-name" name="name" placeholder="Agent Name" required class="glass-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="form-email">Email</label>
+                                <input type="email" id="form-email" name="email" placeholder="agent@network.com" required class="glass-input">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="form-subject">Subject</label>
+                            <input type="text" id="form-subject" name="subject" placeholder="Connection Subject" required class="glass-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="form-message">Transmission Message</label>
+                            <textarea id="form-message" name="message" rows="5" placeholder="Enter message text..." required class="glass-input"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-glow" id="form-submit-btn">Send Message</button>
+                    </form>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 Hassaan Saeed. All system modules operational.</p>
+        <p class="footer-sub">Designed for premium visuals and maximum client-side performance.</p>
+    </footer>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
