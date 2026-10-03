@@ -1,395 +1,520 @@
-/* ==========================================
-   FUTURISTIC INTERACTIVE SCRIPTS
-   ========================================== */
+/* ==========================================================================
+   HASSAAN SAEED PORTFOLIO - INTERACTIVE CONTROLLER
+   Matches iamwaleed.me UX dynamics: auto-cycling bento project accordion,
+   smooth micro-interactions, click-to-copy clipboard toasts, and contact drawer.
+   ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
-    initCustomCursor();
-    initParticleBackground();
-    initCardHoverGlows();
-    initHudRadar();
-    initDecryptEffect();
-    initScrollReveal();
-    initContactForm();
+    initProjectAccordion();
+    initContactModal();
+    initMobileDrawer();
+    initSmoothScroll();
+    initClipboardChips();
+    initBallHover();
+    initWordJitter();
+    initPlaceholderLinks();
 });
 
-/* ==========================================
-   1. CUSTOM SMOOTH CURSOR TRACKER
-   ========================================== */
-function initCustomCursor() {
-    const cursor = document.getElementById('custom-cursor');
-    const dot = document.getElementById('cursor-dot');
-    
-    if (!cursor || !dot) return;
+/* ==========================================================================
+   1. BENTO PROJECTS INTERACTIVE ACCORDION (Matches Mj component)
+   ========================================================================== */
+function initProjectAccordion() {
+    const list = document.getElementById('projects-list');
+    const projectItems = document.querySelectorAll('.project-item');
+    if (!list || projectItems.length === 0) return;
 
-    let mouseX = 0, mouseY = 0;
-    let cursorX = 0, cursorY = 0;
+    let currentIndex = 0;
+    let autoCycleTimer = null;
+    let hoverIntentTimer = null;
+    let isUserInteracting = false;
 
-    // Track real mouse coordinates
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        
-        // Instant inner dot placement
-        dot.style.left = mouseX + 'px';
-        dot.style.top = mouseY + 'px';
-    });
-
-    // Interpolation (lerp) loop for the outer lagging ring
-    function renderCursor() {
-        const dx = mouseX - cursorX;
-        const dy = mouseY - cursorY;
-        
-        cursorX += dx * 0.15;
-        cursorY += dy * 0.15;
-        
-        cursor.style.left = cursorX + 'px';
-        cursor.style.top = cursorY + 'px';
-        
-        requestAnimationFrame(renderCursor);
+    function setActiveProject(index) {
+        if (index === currentIndex) return;
+        projectItems.forEach((item, i) => item.classList.toggle('active', i === index));
+        currentIndex = index;
     }
-    renderCursor();
 
-    // Hover states for links and buttons
-    const interactiveElements = document.querySelectorAll('a, button, .hud-orbit-item, .glass-input');
-    interactiveElements.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            cursor.classList.add('hovered');
-        });
-        el.addEventListener('mouseleave', () => {
-            cursor.classList.remove('hovered');
-        });
-    });
-}
-
-/* ==========================================
-   2. INTERACTIVE CANVAS PARTICLE FIELD
-   ========================================== */
-function initParticleBackground() {
-    const canvas = document.getElementById('particle-canvas');
-    if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
-    let width = canvas.width = window.innerWidth;
-    let height = canvas.height = window.innerHeight;
-
-    let particles = [];
-    let mouse = { x: null, y: null, radius: 150 };
-
-    window.addEventListener('resize', () => {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-    });
-
-    window.addEventListener('mousemove', (e) => {
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
-    });
-
-    window.addEventListener('mouseleave', () => {
-        mouse.x = null;
-        mouse.y = null;
-    });
-
-    // Particle Blueprints
-    class Particle {
-        constructor() {
-            this.x = Math.random() * width;
-            this.y = Math.random() * height;
-            this.vx = (Math.random() - 0.5) * 0.4;
-            this.vy = (Math.random() - 0.5) * 0.4;
-            this.size = Math.random() * 2 + 1;
-            this.color = 'rgba(6, 182, 212, 0.4)'; // Cyan hue base
-        }
-
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fillStyle = this.color;
-            ctx.fill();
-        }
-
-        update() {
-            this.x += this.vx;
-            this.y += this.vy;
-
-            // Bounce off borders
-            if (this.x < 0 || this.x > width) this.vx = -this.vx;
-            if (this.y < 0 || this.y > height) this.vy = -this.vy;
-
-            // Mouse interaction push/pull
-            if (mouse.x != null) {
-                let dx = mouse.x - this.x;
-                let dy = mouse.y - this.y;
-                let dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < mouse.radius) {
-                    let force = (mouse.radius - dist) / mouse.radius;
-                    // Move slightly towards the mouse
-                    this.x -= dx * force * 0.02;
-                    this.y -= dy * force * 0.02;
-                }
+    function startAutoCycle() {
+        stopAutoCycle();
+        autoCycleTimer = setInterval(() => {
+            if (!isUserInteracting) {
+                setActiveProject((currentIndex + 1) % projectItems.length);
             }
+        }, 3600);
+    }
+
+    function stopAutoCycle() {
+        if (autoCycleTimer) {
+            clearInterval(autoCycleTimer);
+            autoCycleTimer = null;
         }
     }
 
-    // Populate particle buffer
-    const particleCount = Math.min(Math.floor((width * height) / 16000), 100);
-    for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle());
-    }
-
-    // Render loop
-    function animate() {
-        ctx.clearRect(0, 0, width, height);
-
-        // Draw and update particles
-        particles.forEach(p => {
-            p.update();
-            p.draw();
-        });
-
-        // Draw connecting networks
-        for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-                let dx = particles[i].x - particles[j].x;
-                let dy = particles[i].y - particles[j].y;
-                let dist = Math.sqrt(dx * dx + dy * dy);
-
-                if (dist < 120) {
-                    // Set line color opacity based on distance
-                    let alpha = (120 - dist) / 120 * 0.12;
-                    ctx.beginPath();
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(particles[j].x, particles[j].y);
-                    
-                    // Gradient lines between connected nodes
-                    ctx.strokeStyle = `rgba(99, 102, 241, ${alpha})`;
-                    ctx.lineWidth = 0.8;
-                    ctx.stroke();
-                }
-            }
-        }
-        
-        requestAnimationFrame(animate);
-    }
-    animate();
-}
-
-/* ==========================================
-   3. BENTO CARD MOUSE ACCENT GLOW
-   ========================================== */
-function initCardHoverGlows() {
-    const cards = document.querySelectorAll('.bento-card');
-    cards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
-            card.style.setProperty('--x', `${x}px`);
-            card.style.setProperty('--y', `${y}px`);
-        });
+    // Interaction is tracked on the whole list (not per item) so moving between
+    // two projects never restarts the auto-cycle or causes a flicker.
+    list.addEventListener('mouseenter', () => {
+        isUserInteracting = true;
+        stopAutoCycle();
     });
-}
+    list.addEventListener('mouseleave', () => {
+        isUserInteracting = false;
+        clearTimeout(hoverIntentTimer);
+        startAutoCycle();
+    });
 
-/* ==========================================
-   4. INTERACTIVE HUD RADAR SKILLS
-   ========================================== */
-function initHudRadar() {
-    const orbitItems = document.querySelectorAll('.hud-orbit-item');
-    const display = document.getElementById('hud-skill-display');
-    
-    if (!display) return;
-
-    // Custom descriptions for each skill
-    const skillDescriptions = {
-        'Dart': 'Dart // Key framework language for high-performance cross-platform Flutter mobile apps.',
-        'Python': 'Python // Backend scripting, Gemini AI integration systems, and automation scripts.',
-        'C++': 'C++ // Systems programming, low-level efficiency, algorithms, and logical modeling.',
-        'Java': 'Java // Classic Android SDK development and OOP object-oriented blueprints.',
-        'JS': 'JavaScript // Web layouts, interactive canvas systems, node APIs, and web rendering.'
-    };
-
-    orbitItems.forEach(item => {
-        const skill = item.getAttribute('data-skill');
-        
+    projectItems.forEach((item, index) => {
+        // Hover-intent: only switch if the pointer actually rests on the item for a moment.
+        // This stops the "layout moves under the cursor -> switches again" ping-pong.
         item.addEventListener('mouseenter', () => {
-            if (skill && skillDescriptions[skill]) {
-                scrambleText(display, skillDescriptions[skill]);
+            clearTimeout(hoverIntentTimer);
+            hoverIntentTimer = setTimeout(() => setActiveProject(index), 110);
+        });
+        item.addEventListener('mouseleave', () => clearTimeout(hoverIntentTimer));
+
+        const header = item.querySelector('.project-item-header');
+        if (header) {
+            header.addEventListener('click', () => {
+                clearTimeout(hoverIntentTimer);
+                setActiveProject(index);
+            });
+        }
+        const arrowLink = item.querySelector('.project-arrow');
+        if (arrowLink) {
+            arrowLink.addEventListener('click', (e) => e.stopPropagation());
+        }
+    });
+
+    startAutoCycle();
+}
+
+/* ==========================================================================
+   2. CONTACT MODAL & QUICK OUTREACH (Matches J9 component)
+   ========================================================================== */
+function initContactModal() {
+    const modal = document.getElementById('contact-modal');
+    const closeBtn = document.getElementById('modal-close-btn');
+    const triggers = [document.getElementById('contact-cta')];
+
+    if (!modal) return;
+
+    function openModal() {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    triggers.forEach(trigger => {
+        if (trigger) {
+            trigger.addEventListener('click', (e) => {
+                e.preventDefault();
+                openModal();
+            });
+        }
+    });
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeModal);
+    }
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    // Direct message form
+    const form = document.getElementById('direct-message-form');
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('input-name').value.trim();
+            const email = document.getElementById('input-email').value.trim();
+            const message = document.getElementById('input-message').value.trim();
+
+            if (!name || !email || !message) {
+                showToast('Please fill in all fields', 'warning');
+                return;
+            }
+
+            // Compose mailto as guaranteed direct fallback
+            const mailtoUrl = `mailto:hassaannsaeed@gmail.com?subject=Portfolio%20Inquiry%20from%20${encodeURIComponent(name)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)}`;
+            window.open(mailtoUrl, '_blank');
+
+            showToast('Transmission initiated! Opening your mail client...', 'success');
+            form.reset();
+            setTimeout(closeModal, 800);
+        });
+    }
+}
+
+/* ==========================================================================
+   3. MOBILE NAVIGATION DRAWER
+   ========================================================================== */
+function initMobileDrawer() {
+    const toggleBtn = document.getElementById('mobile-toggle');
+    const drawer = document.getElementById('mobile-drawer');
+    const backdrop = document.getElementById('drawer-backdrop');
+    const closeBtn = document.getElementById('drawer-close-btn');
+    const links = document.querySelectorAll('.mobile-nav-link');
+
+    if (!toggleBtn || !drawer || !backdrop) return;
+
+    function openDrawer() {
+        drawer.classList.add('active');
+        backdrop.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeDrawer() {
+        drawer.classList.remove('active');
+        backdrop.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    toggleBtn.addEventListener('click', openDrawer);
+    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+    backdrop.addEventListener('click', closeDrawer);
+
+    // Navigation itself is handled by initSmoothScroll (these links also carry data-scroll)
+    links.forEach(link => link.addEventListener('click', closeDrawer));
+}
+
+/* ==========================================================================
+   4. SMOOTH SCROLLING NAVIGATION
+   ========================================================================== */
+const NAV_TARGETS = {
+    about: 'about',
+    contact: 'contact-cta',
+    projects: 'projects',
+    socials: 'socials'
+};
+// Links that also pop the toast (Socials just scrolls)
+const NAV_TOAST = new Set(['about', 'contact', 'projects']);
+
+function initSmoothScroll() {
+    document.querySelectorAll('[data-scroll]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const key = btn.getAttribute('data-scroll');
+            scrollToSection(NAV_TARGETS[key] || key);
+            if (NAV_TOAST.has(key)) {
+                showToast("It's right on the screen, nerd", 'nerd');
             }
         });
+    });
 
-        item.addEventListener('mouseleave', () => {
-            display.innerText = 'Hover an node';
+    const brandLogo = document.getElementById('brand-logo');
+    if (brandLogo) {
+        brandLogo.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
+    }
+}
+
+function scrollToSection(sectionId) {
+    const el = document.getElementById(sectionId);
+    if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+
+/* ==========================================================================
+   5. CLIPBOARD COPY TOASTS
+   ========================================================================== */
+function initClipboardChips() {
+    const emailChip = document.getElementById('copy-email-chip');
+    const phoneChip = document.getElementById('copy-phone-chip');
+    const socialEmail = document.getElementById('social-email-copy');
+
+    if (emailChip) {
+        emailChip.addEventListener('click', () => {
+            copyTextToClipboard('hassaannsaeed@gmail.com', 'Email copied to clipboard!');
+        });
+    }
+
+    if (phoneChip) {
+        phoneChip.addEventListener('click', () => {
+            copyTextToClipboard('+92 315 0611166', 'Phone number copied to clipboard!');
+        });
+    }
+
+    if (socialEmail) {
+        socialEmail.addEventListener('click', (e) => {
+            e.preventDefault();
+            copyTextToClipboard('hassaannsaeed@gmail.com', 'Email copied to clipboard!');
+        });
+    }
+}
+
+function copyTextToClipboard(text, successMessage) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+            showToast(successMessage, 'success');
+        }).catch(() => {
+            fallbackCopy(text, successMessage);
+        });
+    } else {
+        fallbackCopy(text, successMessage);
+    }
+}
+
+function fallbackCopy(text, successMessage) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+        document.execCommand('copy');
+        showToast(successMessage, 'success');
+    } catch (err) {
+        showToast('Unable to copy automatically. Email: hassaannsaeed@gmail.com', 'info');
+    }
+    document.body.removeChild(textarea);
+}
+
+/* ==========================================================================
+   6. TOAST NOTIFICATION ENGINE (Waleed banner style)
+   ========================================================================== */
+function showToast(message, type = 'info') {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    // don't stack identical toasts if the user clicks repeatedly
+    const existing = Array.from(container.children).find(
+        t => t.dataset.msg === message && !t.classList.contains('removing')
+    );
+    if (existing) return;
+
+    const toast = document.createElement('div');
+    toast.className = 'toast-item';
+    toast.dataset.msg = message;
+
+    let iconClass = 'fa-solid fa-circle-check';
+    if (type === 'warning') iconClass = 'fa-solid fa-triangle-exclamation';
+    if (type === 'info') iconClass = 'fa-solid fa-circle-info';
+
+    toast.innerHTML = type === 'nerd'
+        ? `<span>${message}</span>`
+        : `<i class="${iconClass}"></i><span>${message}</span>`;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('removing');
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 260);
+    }, 3200);
+}
+
+
+/* ==========================================================================
+   7. CONTACT CARD - PURPLE BALL UNDER THE CURSOR
+   One solid, opaque purple circle. It pops in under the pointer with a springy overshoot,
+   follows with soft spring easing, squashes & stretches along its direction of
+   travel, breathes slightly, and shrinks away smoothly when the pointer leaves.
+   (The card itself turns grey via CSS on hover.)
+   ========================================================================== */
+function initBallHover() {
+    const card = document.getElementById('contact-cta');
+    const canvas = document.getElementById('bubble-canvas');
+    if (!card || !canvas || !canvas.getContext) return;
+
+    const ctx = canvas.getContext('2d');
+    let w = 0, h = 0, dpr = 1;
+    let active = false;
+    let rafId = null;
+    const pointer = { x: 0, y: 0 };
+
+    const ball = { x: 0, y: 0, vx: 0, vy: 0, r: 0, vr: 0, angle: 0, stretch: 0, sv: 0 };
+
+    function resize() {
+        const rect = card.getBoundingClientRect();
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        w = rect.width;
+        h = rect.height;
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function setPointer(e) {
+        const rect = card.getBoundingClientRect();
+        pointer.x = e.clientX - rect.left;
+        pointer.y = e.clientY - rect.top;
+    }
+
+    function drawBall(t) {
+        if (ball.r < 0.5) return;
+        const r = ball.r * (1 + 0.05 * Math.sin(t / 340));
+
+        ctx.save();
+        ctx.translate(ball.x, ball.y);
+        ctx.rotate(ball.angle);
+        // squash & stretch along the direction of travel
+        ctx.scale(1 + ball.stretch, 1 - ball.stretch * 0.7);
+
+        // flat, fully opaque purple circle (no gloss, no shadow, no transparency)
+        ctx.fillStyle = '#7203a9';
+        ctx.beginPath();
+        ctx.arc(0, 0, r, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+    }
+
+    function frame(t) {
+        ctx.clearRect(0, 0, w, h);
+        const targetR = active ? Math.min(w, h) * 0.17 : 0;
+
+        // radius: springy pop-in (overshoots slightly), smooth ease-out on leave
+        if (active) {
+            ball.vr += (targetR - ball.r) * 0.18;
+            ball.vr *= 0.78;
+        } else {
+            ball.vr += (targetR - ball.r) * 0.10;
+            ball.vr *= 0.62;
+        }
+        ball.r = Math.max(0, ball.r + ball.vr);
+
+        // position: soft spring toward the pointer
+        ball.vx += (pointer.x - ball.x) * 0.06;
+        ball.vy += (pointer.y - ball.y) * 0.06;
+        ball.vx *= 0.84;
+        ball.vy *= 0.84;
+        ball.x += ball.vx;
+        ball.y += ball.vy;
+
+        // squash & stretch along travel direction
+        const speed = Math.hypot(ball.vx, ball.vy);
+        // jelly-like stretch: a spring, so it overshoots and wobbles back into shape
+        ball.sv += (Math.min(speed / 38, 0.4) - ball.stretch) * 0.14;
+        ball.sv *= 0.8;
+        ball.stretch += ball.sv;
+        if (speed > 0.4) {
+            const a = Math.atan2(ball.vy, ball.vx);
+            let diff = a - ball.angle;
+            diff = Math.atan2(Math.sin(diff), Math.cos(diff));
+            ball.angle += diff * 0.2;
+        }
+
+        drawBall(t);
+
+        const settled = !active && ball.r < 0.5 && Math.abs(ball.vr) < 0.05;
+        if (settled) {
+            ball.r = 0; ball.vr = 0;
+            rafId = null;
+            ctx.clearRect(0, 0, w, h);
+        } else {
+            rafId = requestAnimationFrame(frame);
+        }
+    }
+
+    function start() {
+        if (!rafId) rafId = requestAnimationFrame(frame);
+    }
+
+    card.addEventListener('pointerenter', (e) => {
+        resize();
+        setPointer(e);
+        if (ball.r < 1) { ball.x = pointer.x; ball.y = pointer.y; ball.vx = 0; ball.vy = 0; }
+        active = true;
+        start();
+    });
+    card.addEventListener('pointermove', (e) => {
+        setPointer(e);
+        if (!active) { active = true; start(); }
+    });
+    card.addEventListener('pointerleave', () => {
+        active = false;
+        start();
+    });
+
+    window.addEventListener('resize', resize);
+    resize();
+}
+
+/* ==========================================================================
+   7b. ABOUT CARD - WORDS DRIFT RANDOMLY WHILE HOVERED
+   Each word wanders a few pixels in a random direction every ~1.1s (CSS handles
+   the easing). Moves only via translate/rotate, so layout never changes.
+   ========================================================================== */
+function initWordJitter() {
+    const card = document.getElementById('about');
+    if (!card) return;
+    const words = Array.from(card.querySelectorAll('.bt'));
+    if (!words.length) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let timer = null;
+    const rand = (min, max) => min + Math.random() * (max - min);
+
+    function scatter() {
+        words.forEach((el) => {
+            // sometimes a word rests, so the motion feels organic and not uniform
+            if (Math.random() < 0.2) return;
+            el.style.setProperty('--jx', rand(-0.14, 0.14).toFixed(3) + 'em');
+            el.style.setProperty('--jy', rand(-0.12, 0.12).toFixed(3) + 'em');
+            el.style.setProperty('--jr', rand(-5, 5).toFixed(2) + 'deg');
+        });
+    }
+
+    function settle() {
+        words.forEach((el) => {
+            el.style.setProperty('--jx', '0px');
+            el.style.setProperty('--jy', '0px');
+            el.style.setProperty('--jr', '0deg');
+        });
+    }
+
+    card.addEventListener('pointerenter', () => {
+        scatter();
+        clearInterval(timer);
+        timer = setInterval(scatter, 1100);
+    });
+    card.addEventListener('pointerleave', () => {
+        clearInterval(timer);
+        timer = null;
+        settle();
     });
 }
 
-/* ==========================================
-   5. CYBER DECRYPT/SCRAMBLE TYPING EFFECT
-   ========================================== */
-function initDecryptEffect() {
-    // Auto decrypt section headings on scroll, or manually trigger
-    const decryptElements = document.querySelectorAll('[data-decrypt]');
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const element = entry.target;
-                const targetText = element.getAttribute('data-decrypt');
-                if (targetText && !element.classList.contains('decrypted')) {
-                    scrambleText(element, targetText);
-                    element.classList.add('decrypted');
-                }
+/* ==========================================================================
+   8. PLACEHOLDER LINKS (Download CV until the file exists, PromptGuard store)
+   ========================================================================== */
+function initPlaceholderLinks() {
+    // When the CV is ready, set the href of these buttons to e.g. "assets/Hassaan_Saeed_CV.pdf"
+    // and add the `download` attribute - the toast will stop showing automatically.
+    document.querySelectorAll('.cv-btn').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+            const href = btn.getAttribute('href');
+            if (!href || href === '#') {
+                e.preventDefault();
+                showToast('CV will be available soon!', 'info');
             }
         });
-    }, { threshold: 0.2 });
-
-    decryptElements.forEach(el => observer.observe(el));
-}
-
-// Scramble engine
-function scrambleText(element, finalString) {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*()_-+=[]{}<>|';
-    let iterations = 0;
-    const intervalTime = 30; // ms per frame
-    
-    const interval = setInterval(() => {
-        element.innerText = finalString
-            .split('')
-            .map((char, index) => {
-                if (index < iterations) {
-                    return finalString[index];
-                }
-                // Random characters space retention
-                if (char === ' ') return ' ';
-                return chars[Math.floor(Math.random() * chars.length)];
-            })
-            .join('');
-            
-        if (iterations >= finalString.length) {
-            clearInterval(interval);
-            element.innerText = finalString; // Set clean final text
-        }
-        
-        iterations += 1/2; // Speed threshold (decrypt 1 letter every 2 ticks)
-    }, intervalTime);
-}
-
-/* ==========================================
-   6. SCROLL REVEAL (FADE & SLIDE UP)
-   ========================================== */
-function initScrollReveal() {
-    const revealElements = document.querySelectorAll('.reveal');
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-            }
-        });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px' // Trigger slightly before element is in view
     });
 
-    revealElements.forEach(el => observer.observe(el));
-    
-    // Dynamic navigation active link toggler
-    const sections = document.querySelectorAll('section, #apps');
-    const navLinks = document.querySelectorAll('.nav-link');
-    
-    window.addEventListener('scroll', () => {
-        let current = '';
-        
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop - 140;
-            if (window.pageYOffset >= sectionTop) {
-                current = section.getAttribute('id');
+    document.querySelectorAll('.store-soon').forEach((link) => {
+        link.addEventListener('click', (e) => {
+            if (link.getAttribute('href') === '#') {
+                e.preventDefault();
+                e.stopPropagation();
+                showToast('Store link coming soon!', 'info');
             }
         });
-        
-        navLinks.forEach(link => {
-            const target = link.getAttribute('href');
-            link.classList.toggle('active', target === `#${current}`);
-        });
-    });
-}
-
-/* ==========================================
-   7. CONTACT FORM EMAIL SENDER
-   ========================================== */
-function initContactForm() {
-    const form = document.getElementById('contact-form');
-    if (!form) return;
-
-    const emailConfig = {
-        serviceId: 'YOUR_EMAILJS_SERVICE_ID',
-        templateId: 'YOUR_EMAILJS_TEMPLATE_ID',
-        publicKey: 'YOUR_EMAILJS_PUBLIC_KEY',
-        recipient: 'hassaannsaeed@gmail.com'
-    };
-
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-        const formData = new FormData(form);
-        const name = (formData.get('name') || document.getElementById('form-name')?.value || '').toString().trim();
-        const email = (formData.get('email') || document.getElementById('form-email')?.value || '').toString().trim();
-        const subject = (formData.get('subject') || document.getElementById('form-subject')?.value || '').toString().trim();
-        const message = (formData.get('message') || document.getElementById('form-message')?.value || '').toString().trim();
-
-        if (!name || !email || !subject || !message) {
-            alert('Please complete all fields before sending.');
-            return;
-        }
-
-        const button = form.querySelector('button[type="submit"]');
-        const originalText = button ? button.textContent : 'Send Message';
-        if (button) {
-            button.disabled = true;
-            button.textContent = 'Sending...';
-        }
-
-        try {
-            if (
-                window.emailjs &&
-                emailConfig.serviceId !== 'YOUR_EMAILJS_SERVICE_ID' &&
-                emailConfig.templateId !== 'YOUR_EMAILJS_TEMPLATE_ID' &&
-                emailConfig.publicKey !== 'YOUR_EMAILJS_PUBLIC_KEY'
-            ) {
-                const templateParams = {
-                    from_name: name,
-                    from_email: email,
-                    subject: subject,
-                    message: message,
-                    to_email: emailConfig.recipient
-                };
-
-                await emailjs.send(emailConfig.serviceId, emailConfig.templateId, templateParams, {
-                    publicKey: emailConfig.publicKey
-                });
-
-                alert('Your message has been sent successfully.');
-                form.reset();
-            } else {
-                const mailtoLink = `mailto:${emailConfig.recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
-                    `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
-                )}`;
-                window.location.href = mailtoLink;
-                alert('Your mail app has been opened with the message ready to send.');
-            }
-        } catch (error) {
-            console.error('Contact form error:', error);
-            const mailtoLink = `mailto:${emailConfig.recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
-                `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
-            )}`;
-            window.location.href = mailtoLink;
-            alert('The email service is not configured yet, so your mail app was opened with the message ready to send.');
-        } finally {
-            if (button) {
-                button.disabled = false;
-                button.textContent = originalText;
-            }
-        }
     });
 }
