@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initBallHover();
     initWordJitter();
     initPlaceholderLinks();
+    initLatestCommit();
 });
 
 /* ==========================================================================
@@ -205,9 +206,10 @@ function initSmoothScroll() {
     document.querySelectorAll('[data-scroll]').forEach(btn => {
         btn.addEventListener('click', () => {
             const key = btn.getAttribute('data-scroll');
-            scrollToSection(NAV_TARGETS[key] || key);
+            const targetId = NAV_TARGETS[key] || key;
+            scrollToSection(targetId);
             if (NAV_TOAST.has(key)) {
-                showToast("It's right on the screen, nerd", 'nerd');
+                showAnchoredToast("It's right on the screen, chump!", document.getElementById(targetId));
             }
         });
     });
@@ -496,8 +498,8 @@ function initWordJitter() {
    8. PLACEHOLDER LINKS (Download CV until the file exists, PromptGuard store)
    ========================================================================== */
 function initPlaceholderLinks() {
-    // When the CV is ready, set the href of these buttons to e.g. "assets/Hassaan_Saeed_CV.pdf"
-    // and add the `download` attribute - the toast will stop showing automatically.
+    // CV buttons now point at assets/Hassaan_Saeed_CV.pdf. This "coming soon" toast
+    // only fires if a button's href is ever set back to "#".
     document.querySelectorAll('.cv-btn').forEach((btn) => {
         btn.addEventListener('click', (e) => {
             const href = btn.getAttribute('href');
@@ -517,4 +519,102 @@ function initPlaceholderLinks() {
             }
         });
     });
+}
+
+
+/* ==========================================================================
+   9. HERO CARD - "PORTFOLIO LAST UPDATED" (live from the GitHub repo)
+   Reads the newest commit of the portfolio repo and shows its message and age.
+   If GitHub can't be reached (offline, rate-limited) the placeholder text stays.
+   ========================================================================== */
+function initLatestCommit() {
+    const box = document.getElementById('latest-commit');
+    const titleEl = document.getElementById('latest-commit-title');
+    const timeEl = document.getElementById('latest-commit-time');
+    if (!box || !titleEl || !timeEl || !window.fetch) return;
+
+    const REPO = 'hassaannsaeed/portfolio';
+
+    function timeAgo(date) {
+        const s = Math.max(0, Math.floor((Date.now() - date.getTime()) / 1000));
+        const units = [
+            ['year', 31536000], ['month', 2592000], ['week', 604800],
+            ['day', 86400], ['hour', 3600], ['minute', 60]
+        ];
+        for (const [name, secs] of units) {
+            const n = Math.floor(s / secs);
+            if (n >= 1) return n + ' ' + name + (n > 1 ? 's' : '') + ' ago';
+        }
+        return 'just now';
+    }
+
+    function render(message, isoDate, url) {
+        titleEl.textContent = message;
+        titleEl.title = message;
+        timeEl.textContent = timeAgo(new Date(isoDate));
+        if (url) box.setAttribute('href', url);
+    }
+
+    // Show the last good result immediately (avoids a flash and saves API calls)
+    try {
+        const cached = JSON.parse(sessionStorage.getItem('latestCommit') || 'null');
+        if (cached) render(cached.message, cached.date, cached.url);
+    } catch (e) { /* storage unavailable - ignore */ }
+
+    fetch('https://api.github.com/repos/' + REPO + '/commits?per_page=1')
+        .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
+        .then((data) => {
+            const c = data && data[0];
+            if (!c) return;
+            const message = (c.commit.message || '').split('\n')[0].trim();
+            const date = c.commit.committer.date;
+            render(message, date, c.html_url);
+            try {
+                sessionStorage.setItem('latestCommit', JSON.stringify({ message, date, url: c.html_url }));
+            } catch (e) { /* ignore */ }
+        })
+        .catch(() => {
+            if (titleEl.textContent.indexOf('Checking') === 0) {
+                titleEl.textContent = 'Always improving';
+                timeEl.textContent = 'recently';
+            }
+        });
+}
+
+
+/* ==========================================================================
+   10. ANCHORED TOAST - pops up on the card the navbar link scrolled to
+   Uses page coordinates (not fixed), so it stays glued to the card while the
+   smooth scroll is still travelling there. Only one at a time.
+   ========================================================================== */
+let anchoredToastTimer = null;
+let anchoredToastEl = null;
+
+function showAnchoredToast(message, targetEl) {
+    if (!targetEl) return;
+
+    // replace any toast that's still showing
+    if (anchoredToastEl) {
+        clearTimeout(anchoredToastTimer);
+        anchoredToastEl.remove();
+        anchoredToastEl = null;
+    }
+
+    const rect = targetEl.getBoundingClientRect();
+    const toast = document.createElement('div');
+    toast.className = 'anchored-toast';
+    toast.setAttribute('role', 'status');
+    toast.textContent = message;
+    toast.style.left = (rect.left + window.scrollX + rect.width / 2) + 'px';
+    toast.style.top = (rect.top + window.scrollY + rect.height / 2) + 'px';
+    document.body.appendChild(toast);
+    anchoredToastEl = toast;
+
+    anchoredToastTimer = setTimeout(() => {
+        toast.classList.add('leaving');
+        setTimeout(() => {
+            toast.remove();
+            if (anchoredToastEl === toast) anchoredToastEl = null;
+        }, 380);
+    }, 2600);
 }

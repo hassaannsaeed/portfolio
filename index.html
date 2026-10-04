@@ -54,7 +54,7 @@
             <button class="mobile-nav-link" data-scroll="contact">Contact</button>
             <button class="mobile-nav-link" data-scroll="projects">Projects</button>
             <button class="mobile-nav-link" data-scroll="socials">Socials</button>
-            <a href="#" class="btn-primary cv-btn" id="mobile-cv-btn" style="margin-top: 1rem;">
+            <a href="assets/Hassaan_Saeed_CV.pdf" download="Hassaan_Saeed_CV.pdf" class="btn-primary cv-btn" id="mobile-cv-btn" style="margin-top: 1rem;">
                 <i class="fa-solid fa-download"></i> Download CV
             </a>
         </div>
@@ -72,7 +72,7 @@
                     <button class="nav-item" data-scroll="contact">CONTACT</button>
                     <button class="nav-item" data-scroll="projects">PROJECTS</button>
                     <button class="nav-item" data-scroll="socials">SOCIALS</button>
-                    <a href="#" class="btn-primary cv-btn" id="header-cv-btn">
+                    <a href="assets/Hassaan_Saeed_CV.pdf" download="Hassaan_Saeed_CV.pdf" class="btn-primary cv-btn" id="header-cv-btn">
                         <i class="fa-solid fa-download"></i> Download CV
                     </a>
                 </div>
@@ -95,9 +95,18 @@
                     <circle cx="100" cy="100" r="45" stroke="currentColor" stroke-width="1.2"/>
                 </svg>
 
-                <div class="hero-status-bar">
-                    <span class="beacon-dot"></span>
-                    <span>Solo Mobile App Developer &amp; AI Builder</span>
+                <div class="hero-top">
+                    <div class="hero-status-bar">
+                        <span class="beacon-dot"></span>
+                        <span>Solo Mobile App Developer &amp; AI Builder</span>
+                    </div>
+
+                    <!-- Live "last updated" info, pulled from the GitHub repo (see initLatestCommit in app.js) -->
+                    <a class="latest-commit" id="latest-commit" href="https://github.com/hassaannsaeed/portfolio" target="_blank" rel="noopener noreferrer">
+                        <span class="latest-commit-label"><i class="fab fa-github"></i> Portfolio last updated</span>
+                        <span class="latest-commit-title" id="latest-commit-title">Checking latest update…</span>
+                        <span class="latest-commit-meta"><span class="latest-commit-repo">portfolio</span><span class="latest-commit-dot">·</span><span id="latest-commit-time">just now</span></span>
+                    </a>
                 </div>
 
                 <div class="hero-typography">
@@ -170,7 +179,7 @@
                     <div class="project-item active" data-project="finora">
                         <div class="project-item-header">
                             <h3 class="project-title">Finora AI</h3>
-                            <a class="project-arrow" href="https://play.google.com/store/apps/details?id=com.castorlabs.finora" target="_blank" rel="noopener noreferrer" aria-label="Open Finora AI on Google Play"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                            <a class="project-arrow" href="https://play.google.com/store/apps/details?id=com.castorlabs.finora" target="_blank" rel="noopener noreferrer" aria-label="Open Finora AI on Google Play"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 38 L38 10"/><path d="M14 10 H38 V34"/></svg></a>
                         </div>
                         <div class="project-meta">
                             <span class="project-desc">AI Expense Tracker &amp; Conversational Assistant</span>
@@ -187,7 +196,7 @@
                     <div class="project-item" data-project="smartdukaan">
                         <div class="project-item-header">
                             <h3 class="project-title">SmartDukaan</h3>
-                            <a class="project-arrow" href="https://play.google.com/store/apps/details?id=com.castorlabs.smartdukaan&hl=en" target="_blank" rel="noopener noreferrer" aria-label="Open SmartDukaan on Google Play"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                            <a class="project-arrow" href="https://play.google.com/store/apps/details?id=com.castorlabs.smartdukaan&hl=en" target="_blank" rel="noopener noreferrer" aria-label="Open SmartDukaan on Google Play"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 38 L38 10"/><path d="M14 10 H38 V34"/></svg></a>
                         </div>
                         <div class="project-meta">
                             <span class="project-desc">B2B Retail Companion • Barcode &amp; AI OCR</span>
@@ -204,7 +213,7 @@
                     <div class="project-item" data-project="offbeat">
                         <div class="project-item-header">
                             <h3 class="project-title">Offbeat</h3>
-                            <a class="project-arrow" href="https://play.google.com/store/apps/details?id=com.castorlabs.offbeat&hl=en" target="_blank" rel="noopener noreferrer" aria-label="Open Offbeat on Google Play"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                            <a class="project-arrow" href="https://play.google.com/store/apps/details?id=com.castorlabs.offbeat&hl=en" target="_blank" rel="noopener noreferrer" aria-label="Open Offbeat on Google Play"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 38 L38 10"/><path d="M14 10 H38 V34"/></svg></a>
                         </div>
                         <div class="project-meta">
                             <span class="project-desc">AI Focus Coaching &amp; Addiction Score</span>
@@ -221,7 +230,7 @@
                     <div class="project-item" data-project="promptguard">
                         <div class="project-item-header">
                             <h3 class="project-title">PromptGuard</h3>
-                            <a class="project-arrow store-soon" href="#" aria-label="PromptGuard store link"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                            <a class="project-arrow store-soon" href="#" aria-label="PromptGuard store link"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 38 L38 10"/><path d="M14 10 H38 V34"/></svg></a>
                         </div>
                         <div class="project-meta">
                             <span class="project-desc">LLM Injection Defense &amp; AI Security App</span>
