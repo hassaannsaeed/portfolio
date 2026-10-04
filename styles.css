@@ -391,7 +391,7 @@ body {
 }
 .latest-commit-label i { font-size: 1.9em; color: var(--accent-violet); letter-spacing: 0; }
 .latest-commit-title {
-    font-size: clamp(1.15rem, 1.6vw, 2.1rem);
+    font-size: clamp(0.95rem, 1.1vw, 1.45rem);
     font-weight: 700;
     line-height: 1.2;
     color: #ffffff;
@@ -1085,11 +1085,11 @@ textarea.glass-input {
     color: #ffffff;
     font-family: var(--font-body);
     font-weight: 600;
-    font-size: clamp(1rem, 1.3vw, 1.6rem);
-    padding: clamp(0.85rem, 1.1vw, 1.3rem) clamp(1.4rem, 1.9vw, 2.4rem);
-    border-radius: 16px;
+    font-size: clamp(0.85rem, 1.05vw, 1.3rem);
+    padding: clamp(0.65rem, 0.85vw, 1rem) clamp(1.1rem, 1.5vw, 1.9rem);
+    border-radius: 13px;
     border: 1.5px solid rgba(255, 255, 255, 0.55);
-    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5), 0 0 0 6px rgba(114, 3, 169, 0.28);
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.5), 0 0 0 5px rgba(114, 3, 169, 0.28);
     text-align: center;
     animation: anchoredIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
